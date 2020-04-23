@@ -28,6 +28,7 @@ namespace API
                     // if not database is available then one is created
                     var context = services.GetRequiredService<DataContext>();
                     context.Database.Migrate();
+                    Seed.SeedData(context);
                 }
                 catch (Exception ex)
                 {
