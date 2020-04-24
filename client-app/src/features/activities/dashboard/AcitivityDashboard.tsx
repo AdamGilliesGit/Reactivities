@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { SyntheticEvent } from 'react'
 import { Grid } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/activity'
 import ActivityList from './ActivityList'
@@ -9,16 +9,18 @@ interface IProps {
     activities: IActivity[]
     selectActivity: (id: string) => void;
     selectedActivity: IActivity | null;
-    editMode: boolean;
+    editMode: boolean
     setEditMode: (editMode: boolean) => void;
     setSelectedActivity: (acitvity: IActivity | null) => void;
     createActivity: (acitvity: IActivity) => void;
     editActivity: (acitvity: IActivity) => void;
-    deleteActivity: (id: string) => void;
+    deleteActivity: (event: SyntheticEvent<HTMLButtonElement>, id: string) => void;
+    submitting: boolean;
+    target: string;
 }
 
 export const AcitivityDashboard: React.FC<IProps> =
-    ({ activities, selectActivity, selectedActivity, editMode, setEditMode, setSelectedActivity, createActivity, editActivity, deleteActivity }) => {
+    ({ activities, selectActivity, selectedActivity, editMode, setEditMode, setSelectedActivity, createActivity, editActivity, deleteActivity, submitting, target }) => {
         return (
             <Grid>
                 <Grid.Column width={10}>
@@ -26,6 +28,8 @@ export const AcitivityDashboard: React.FC<IProps> =
                     activities={activities} 
                     selectActivity={selectActivity} 
                     deleteActivity={deleteActivity}
+                    submitting={submitting}
+                    target={target}
                     />
                 </Grid.Column>
                 <Grid.Column width={6}>
@@ -43,6 +47,7 @@ export const AcitivityDashboard: React.FC<IProps> =
                             activity={selectedActivity!}
                             createActivity={createActivity}
                             editActivity={editActivity} 
+                            submitting={submitting}
                             />
                     )}
                 </Grid.Column>
