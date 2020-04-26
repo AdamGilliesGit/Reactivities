@@ -1,8 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Persistence;
+using System.Net;
+using Application.Errors;
 
 namespace Application.Activities
 {
@@ -19,6 +22,19 @@ namespace Application.Activities
             public string Venue { get; set; }
         }
 
+        public class CommandValiator : AbstractValidator<Command>
+        {
+            public CommandValiator()
+            {
+                RuleFor(x => x.Title).NotEmpty();
+                RuleFor(x => x.Description).NotEmpty();
+                RuleFor(x => x.Category).NotEmpty();
+                RuleFor(x => x.Date).NotEmpty();
+                RuleFor(x => x.City).NotEmpty();
+                RuleFor(x => x.Venue).NotEmpty();
+            }
+        }
+
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
@@ -32,8 +48,8 @@ namespace Application.Activities
                 // get the activity to be edited
                 var activity = await _context.Activities.FindAsync(request.Id);
                 // check for null (invalid request of activity)
-                if (activity == null)
-                    throw new Exception("Could not find activity.");
+                 if (activity == null)
+                    throw new RestException(HttpStatusCode.NotFound, new { activity = "Not found." });
 
                 // requires mapping
                 activity.Title = request.Title ?? activity.Title;
