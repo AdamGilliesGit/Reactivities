@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class UserController : BaseController
+    public class UserController : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost("login")]

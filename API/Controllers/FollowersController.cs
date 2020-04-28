@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [Route("api/profiles")]
-    public class FollowersController : BaseController
+    public class FollowersController : ControllerBase
     {
         [HttpPost("{username}/follow")]
         public async Task<ActionResult<Unit>> Follow(string username)
