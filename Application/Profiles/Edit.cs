@@ -17,6 +17,14 @@ namespace Application.Profiles
             public string Bio { get; set; }
         }
 
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.DisplayName).NotEmpty();
+            }
+        }
+
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
@@ -27,17 +35,8 @@ namespace Application.Profiles
                 _context = context;
             }
 
-            public class CommandValidator : AbstractValidator<Command>
-            {
-                public CommandValidator()
-                {
-                    RuleFor(x => x.DisplayName).NotEmpty();
-                }
-            }
-
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                // get the current user
                 var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
 
                 user.DisplayName = request.DisplayName ?? user.DisplayName;
@@ -47,9 +46,8 @@ namespace Application.Profiles
 
                 if (success) return Unit.Value;
 
-                throw new Exception("Problem saving changes.");
+                throw new Exception("Problem saving changes");
             }
         }
-
     }
 }
